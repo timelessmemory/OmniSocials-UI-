@@ -1,0 +1,173 @@
+python3
+print(message,..,..)
+input(message)
+
+a = 100
+if a >= 0:
+    print(a)
+else:
+    print(-a)
+
+Python程序是大小写敏感的
+
+在Python中，采用的格式化方式和C语言是一致的，用%实现，举例如下：
+
+>>> 'Hello, %s' % 'world'
+'Hello, world'
+>>> 'Hi, %s, you have $%d.' % ('Michael', 1000000)
+'Hi, Michael, you have $1000000.'
+
+你可能猜到了，%运算符就是用来格式化字符串的。在字符串内部，%s表示用字符串替换，%d表示用整数替换，有几个%?占位符，后面就跟几个变量或者值，顺序要对应好。如果只有一个%?，括号可以省略。
+
+list
+
+Python内置的一种数据类型是列表：list。list是一种有序的集合，可以随时添加和删除其中的元素。
+
+比如，列出班里所有同学的名字，就可以用一个list表示：
+
+>>> classmates = ['Michael', 'Bob', 'Tracy']
+>>> classmates
+['Michael', 'Bob', 'Tracy']
+
+变量classmates就是一个list。用len()函数可以获得list元素的个数：
+
+>>> len(classmates)
+3
+
+用索引来访问list中每一个位置的元素，记得索引是从0开始的：
+
+>>> classmates[0]
+'Michael'
+>>> classmates[1]
+'Bob'
+>>> classmates[2]
+'Tracy'
+>>> classmates[3]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: list index out of range
+list是一个可变的有序表，所以，可以往list中追加元素到末尾：
+
+>>> classmates.append('Adam')
+>>> classmates
+['Michael', 'Bob', 'Tracy', 'Adam']
+
+也可以把元素插入到指定的位置，比如索引号为1的位置：
+
+>>> classmates.insert(1, 'Jack')
+>>> classmates
+['Michael', 'Jack', 'Bob', 'Tracy', 'Adam']
+
+要删除list末尾的元素，用pop()方法：
+
+>>> classmates.pop()
+'Adam'
+>>> classmates
+['Michael', 'Jack', 'Bob', 'Tracy']
+
+要删除指定位置的元素，用pop(i)方法，其中i是索引位置：
+
+>>> classmates.pop(1)
+'Jack'
+>>> classmates
+['Michael', 'Bob', 'Tracy']
+
+要把某个元素替换成别的元素，可以直接赋值给对应的索引位置：
+
+>>> classmates[1] = 'Sarah'
+>>> classmates
+['Michael', 'Sarah', 'Tracy']
+
+list里面的元素的数据类型也可以不同，比如：
+
+>>> L = ['Apple', 123, True]
+
+list元素也可以是另一个list，比如：
+
+>>> s = ['python', 'java', ['asp', 'php'], 'scheme']
+>>> len(s)
+4
+
+tuple
+
+另一种有序列表叫元组：tuple。tuple和list非常类似，但是tuple一旦初始化就不能修改，比如同样是列出同学的名字：
+
+>>> classmates = ('Michael', 'Bob', 'Tracy')
+
+现在，classmates这个tuple不能变了，它也没有append()，insert()这样的方法。其他获取元素的方法和list是一样的，你可以正常地使用classmates[0]，classmates[-1]，但不能赋值成另外的元素。
+
+要定义一个只有1个元素的tuple，如果你这么定义：
+
+>>> t = (1)
+>>> t
+1
+
+定义的不是tuple，是1这个数！这是因为括号()既可以表示tuple，又可以表示数学公式中的小括号，这就产生了歧义，因此，Python规定，这种情况下，按小括号进行计算，计算结果自然是1。
+
+所以，只有1个元素的tuple定义时必须加一个逗号,，来消除歧义：
+
+>>> t = (1,)
+>>> t
+(1,)
+
+
+names = ['Michael', 'Bob', 'Tracy']
+for name in names:
+    print(name)
+
+Python提供一个range()函数，可以生成一个整数序列，再通过list()函数可以转换为list。比如range(5)生成的序列是从0开始小于5的整数：
+
+>>> list(range(5))
+[0, 1, 2, 3, 4]
+
+sum = 0
+n = 99
+while n > 0:
+    sum = sum + n
+    n = n - 2
+print(sum)
+
+Python内置了字典：dict的支持，dict全称dictionary，在其他语言中也称为map，使用键-值（key-value）存储，具有极快的查找速度。
+>>> d = {'Michael': 95, 'Bob': 75, 'Tracy': 85}
+>>> d['Michael']
+95
+
+
+set和dict类似，也是一组key的集合，但不存储value。由于key不能重复，所以，在set中，没有重复的key。
+
+要创建一个set，需要提供一个list作为输入集合：
+
+>>> s = set([1, 2, 3])
+>>> s
+{1, 2, 3}
+
+返回多个值
+
+函数可以返回多个值吗？答案是肯定的。
+
+比如在游戏中经常需要从一个点移动到另一个点，给出坐标、位移和角度，就可以计算出新的新的坐标：
+
+import math
+
+def move(x, y, step, angle=0):
+    nx = x + step * math.cos(angle)
+    ny = y - step * math.sin(angle)
+    return nx, ny
+
+import math语句表示导入math包，并允许后续代码引用math包里的sin、cos等函数。
+
+然后，我们就可以同时获得返回值：
+
+>>> x, y = move(100, 100, 60, math.pi / 6)
+>>> print(x, y)
+151.96152422706632 70.0
+
+但其实这只是一种假象，Python函数返回的仍然是单一值：
+
+>>> r = move(100, 100, 60, math.pi / 6)
+>>> print(r)
+(151.96152422706632, 70.0)
+
+原来返回值是一个tuple！但是，在语法上，返回一个tuple可以省略括号，而多个变量可以同时接收一个tuple，按位置赋给对应的值，所以，Python的函数返回多值其实就是返回一个tuple，但写起来更方便。
+
+
