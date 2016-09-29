@@ -3,3 +3,9 @@
 http://www.html5tricks.com/category/html5-demo/page/3
 http://www.freebuf.com/wenku
 http://crossoverjie.top/2016/09/04/SSM5/
+
+Wordpress Ghost 
+Hexo,Jekyll 静态博客
+http://www.pchou.info/ssgithubPage/2013-01-05-build-github-blog-page-04.html
+
+http://www.jianshu.com/subscription_notes
