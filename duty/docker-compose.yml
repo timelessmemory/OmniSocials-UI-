@@ -1,0 +1,93 @@
+version: '2'
+services:
+  omnisocials-nginx:
+    image: docker.quncrm.com/base/openresty
+    container_name: omnisocials-webserver
+    volumes_from:
+      - omnisocials-frontend
+    volumes:
+      - ./omnisocials-frontend/docker/nginx/conf/local.conf:/etc/nginx/sites-enabled/frontend.conf
+      - ./omnisocials-backend/docker/nginx/conf/local.conf:/etc/nginx/sites-enabled/backend.conf
+      - ./log/nginx:/var/log/nginx
+    ports:
+      - "80:80"
+    links:
+      - omnisocials-backend
+      - omnisocials-frontend
+    extends:
+      file: "docker-compose-common.yml"
+      service: "common"
+
+  omnisocials-frontend:
+    build:
+      context: ./omnisocials-frontend
+      dockerfile: docker/php-fpm/Dockerfile
+    container_name: omnisocials-frontend
+    volumes:
+      - ./omnisocials-frontend:/srv/omnisocials-frontend
+    volumes_from:
+      - omnisocials-backend
+    extends:
+      file: "docker-compose-common.yml"
+      service: "common"
+
+  omnisocials-backend:
+    build:
+      context: ./omnisocials-backend
+      dockerfile: docker/php-fpm/Dockerfile
+    mem_limit: 256m
+    container_name: omnisocials-backend
+    volumes:
+      - ./omnisocials-backend:/srv/omnisocials-backend
+    links:
+      - omnisocials-mongodb
+      - omnisocials-redis
+    extends:
+      file: "docker-compose-common.yml"
+      service: "common"
+
+  omnisocials-worker:
+    build:
+      context: ./omnisocials-backend
+      dockerfile: docker/worker/Dockerfile.local
+    mem_limit: 256m
+    container_name: omnisocials-worker
+    volumes_from:
+      - omnisocials-backend
+    volumes:
+      - ./log/worker:/var/log/supervisor
+      - ./omnisocials-backend/docker/worker/conf/quncrm_local.conf:/etc/supervisor/conf.d/quncrm.conf
+    links:
+      - omnisocials-mongodb
+      - omnisocials-redis
+    extends:
+      file: "docker-compose-common.yml"
+      service: "common"
+
+  omnisocials-mongodb:
+    image: docker.quncrm.com/service/mongodb:3.2.7
+    container_name: omnisocials-mongodb
+    environment:
+      - INIT_MONGO_USER="true"
+    volumes:
+      - ./omnisocials-backend/docker/mongodb/init_db_user.sh:/etc/service/init_db_user/run
+      - ./data/mongodb:/var/lib/mongodb
+      - ./log/mongodb:/var/log/mongodb
+    ports:
+      - 26017:27017
+    extends:
+      file: "docker-compose-common.yml"
+      service: "common"
+
+  omnisocials-redis:
+    image: docker.quncrm.com/service/redis:3.0.7
+    container_name: omnisocials-redis
+    ports:
+      - 6378:6379
+    volumes:
+      - ./data/redis:/var/lib/redis
+      - ./log/redis:/var/log/redis
+    extends:
+      file: "docker-compose-common.yml"
+      service: "common"
+

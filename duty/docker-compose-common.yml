@@ -1,0 +1,30 @@
+version: '2'
+services:
+  common:
+    mem_limit: 128m
+    memswap_limit: -1
+    restart: always
+    extra_hosts:
+      - "wm.com: 127.0.0.1"
+      - "ajax.wm.com: 127.0.0.1"
+      - "dev.quncrm.com: 192.168.161.53"
+      - "dev-ajax.quncrm.com: 192.168.161.53"
+      - "staging.quncrm.com: 192.168.161.54"
+      - "staging-ajax.quncrm.com: 192.168.161.54"
+      - "dev.wx.quncrm.com: 192.168.161.55"
+      - "dev.wxapi.quncrm.com: 192.168.161.55"
+      - "staging.wx.quncrm.com: 192.168.161.56"
+      - "staging.wxapi.quncrm.com: 192.168.161.56"
+      - "dev-api.quncrm.com: 192.168.161.242"
+      - "sandbox-api.quncrm.com: 192.168.161.230"
+      - "u.omnisocials.com: 192.168.161.242"
+
+  common-dev:
+    extends:
+      service: "common"
+    mem_limit: 2048m
+
+  common-stage:
+    extends:
+      service: "common"
+    mem_limit: 2048m
